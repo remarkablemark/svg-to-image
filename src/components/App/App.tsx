@@ -165,6 +165,15 @@ export function App() {
         </p>
       </header>
 
+      {error && (
+        <div
+          className="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-900/30 dark:text-red-200"
+          role="alert"
+        >
+          {error}
+        </div>
+      )}
+
       <section className="grid gap-6 lg:grid-cols-2">
         <div className="flex flex-col gap-4">
           <label className="text-sm font-medium" htmlFor="svg-input">
@@ -299,15 +308,6 @@ export function App() {
           </div>
         </div>
       </section>
-
-      {error && (
-        <div
-          className="mt-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700 dark:border-red-900 dark:bg-red-900/30 dark:text-red-200"
-          role="alert"
-        >
-          {error}
-        </div>
-      )}
 
       {output && (
         <section className="mt-8 grid gap-6 lg:grid-cols-2">
