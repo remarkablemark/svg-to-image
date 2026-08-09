@@ -4,9 +4,17 @@
 [![test](https://github.com/remarkablemark/svg-to-image/actions/workflows/test.yml/badge.svg)](https://github.com/remarkablemark/svg-to-image/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/remarkablemark/svg-to-image/graph/badge.svg?token=Eq8Hff7aG4)](https://codecov.io/gh/remarkablemark/svg-to-image)
 
-🖼️ Convert SVG to PNG image:
+🖼️ Convert SVG to PNG, JPEG, or WebP image:
 
 - [SVG to Image](https://remarkablemark.org/svg-to-image/)
+
+## Features
+
+- Paste SVG markup or upload an `.svg` file.
+- Convert SVG to PNG, JPEG, or WebP.
+- Adjust output width, height, and scale.
+- Preview the SVG and the converted image before downloading.
+- Responsive layout with dark mode support.
 
 ## Install
 
