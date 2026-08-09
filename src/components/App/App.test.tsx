@@ -33,6 +33,7 @@ describe('App component', () => {
 
     expect(screen.getByLabelText(/svg input/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/upload svg file/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/filename/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/format/i)).toBeInTheDocument();
   });
 
@@ -91,12 +92,16 @@ describe('App component', () => {
       expect(screen.getByAltText('Converted')).toBeInTheDocument();
     });
 
+    const filenameInput = screen.getByLabelText(/filename/i);
+    await userEvent.clear(filenameInput);
+    await userEvent.type(filenameInput, 'custom');
+
     const formatSelect = screen.getByLabelText(/format/i);
     await userEvent.selectOptions(formatSelect, 'image/webp');
 
     await waitFor(() => {
       expect(
-        screen.getByRole('button', { name: /download svg-to-image\.webp/i }),
+        screen.getByRole('button', { name: /download custom\.webp/i }),
       ).toBeInTheDocument();
     });
   });
@@ -175,7 +180,7 @@ describe('App component', () => {
     fireEvent.change(input, { target: { files: [file] } });
 
     await waitFor(() => {
-      expect(screen.getByText('icon.svg')).toBeInTheDocument();
+      expect(screen.getByLabelText(/filename/i)).toHaveValue('icon');
     });
 
     await waitFor(() => {
@@ -217,7 +222,7 @@ describe('App component', () => {
     fireEvent.drop(textarea, { dataTransfer });
 
     await waitFor(() => {
-      expect(screen.getByText('dropped.svg')).toBeInTheDocument();
+      expect(screen.getByLabelText(/filename/i)).toHaveValue('dropped');
     });
 
     await waitFor(() => {
@@ -262,6 +267,27 @@ describe('App component', () => {
     const textarea = screen.getByLabelText(/svg input/i);
     fireEvent.dragOver(textarea);
     fireEvent.dragLeave(textarea);
+  });
+
+  it('falls back to default filename when filename input is cleared', async () => {
+    render(<App />);
+
+    const textarea = screen.getByLabelText(/svg input/i);
+    fireEvent.change(textarea, { target: { value: svg } });
+
+    await waitFor(() => {
+      expect(screen.getByAltText('Converted')).toBeInTheDocument();
+    });
+
+    const filenameInput = screen.getByLabelText(/filename/i);
+    await userEvent.type(filenameInput, 'custom');
+    await userEvent.clear(filenameInput);
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /download svg-to-image\.png/i }),
+      ).toBeInTheDocument();
+    });
   });
 
   it('downloads the converted image', async () => {

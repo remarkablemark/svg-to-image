@@ -61,7 +61,9 @@ export function App() {
 
     try {
       const content = await readSvgFile(file);
-      updateSvg(content, file.name.replace(/\.svg$/i, ''));
+      const baseFilename = file.name.replace(/\.svg$/i, '');
+      setFilename(baseFilename);
+      updateSvg(content, baseFilename);
     } catch (err) {
       /* v8 ignore next */
       setError(err instanceof Error ? err.message : 'Failed to read file');
@@ -80,7 +82,9 @@ export function App() {
 
     try {
       const content = await readSvgFile(file);
-      updateSvg(content, file.name.replace(/\.svg$/i, ''));
+      const baseFilename = file.name.replace(/\.svg$/i, '');
+      setFilename(baseFilename);
+      updateSvg(content, baseFilename);
     } catch (err) {
       /* v8 ignore next */
       setError(err instanceof Error ? err.message : 'Failed to read file');
@@ -195,11 +199,6 @@ export function App() {
                 type="file"
               />
             </label>
-            {filename && (
-              <span className="text-sm text-slate-500 dark:text-slate-400">
-                {filename}.svg
-              </span>
-            )}
           </div>
         </div>
 
@@ -280,6 +279,23 @@ export function App() {
                 value={height ?? ''}
               />
             </div>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <label className="text-sm font-medium" htmlFor="filename">
+              Filename
+            </label>
+            <input
+              className="rounded-md border border-slate-300 bg-white px-3 py-2 text-sm focus:border-blue-500 focus:outline-none dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100"
+              id="filename"
+              onChange={(event) => {
+                const value = event.target.value.trim();
+                setFilename(value ? value : undefined);
+              }}
+              placeholder="svg-to-image"
+              type="text"
+              value={filename ?? ''}
+            />
           </div>
         </div>
       </section>
