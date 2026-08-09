@@ -14,9 +14,9 @@ export function App() {
   const [svg, setSvg] = useState('');
   const [filename, setFilename] = useState<string | undefined>(undefined);
   const [format, setFormat] = useState<Format>('image/png');
-  const [width, setWidth] = useState<string>('');
-  const [height, setHeight] = useState<string>('');
-  const [scale, setScale] = useState<string>('1');
+  const [width, setWidth] = useState<number | undefined>(undefined);
+  const [height, setHeight] = useState<number | undefined>(undefined);
+  const [scale, setScale] = useState<number>(1);
   const [output, setOutput] = useState<{
     dataUrl: string;
     filename: string;
@@ -31,15 +31,15 @@ export function App() {
 
     if (!value.trim()) {
       setError(null);
-      setWidth('');
-      setHeight('');
+      setWidth(undefined);
+      setHeight(undefined);
       return;
     }
 
     try {
       const { height, width } = parseSvgSize(value);
-      setWidth(String(width));
-      setHeight(String(height));
+      setWidth(width);
+      setHeight(height);
       setError(null);
     } catch {
       setError('Invalid SVG markup');
@@ -110,10 +110,9 @@ export function App() {
         const result = await convertSvgToImage(svg, {
           filename,
           format,
-          height: height ? Number.parseFloat(height) : undefined,
-          quality: 0.92,
-          scale: scale ? Number.parseFloat(scale) : 1,
-          width: width ? Number.parseFloat(width) : undefined,
+          height,
+          scale,
+          width,
         });
 
         /* v8 ignore next 3 */
@@ -237,7 +236,8 @@ export function App() {
                 id="scale"
                 min="0.1"
                 onChange={(event) => {
-                  setScale(event.target.value);
+                  const value = Number.parseFloat(event.target.value);
+                  setScale(Number.isNaN(value) ? 1 : value);
                 }}
                 step="0.1"
                 type="number"
@@ -254,11 +254,12 @@ export function App() {
                 id="width"
                 min="1"
                 onChange={(event) => {
-                  setWidth(event.target.value);
+                  const value = event.target.value;
+                  setWidth(value ? Number.parseFloat(value) : undefined);
                 }}
                 placeholder="Auto"
                 type="number"
-                value={width}
+                value={width ?? ''}
               />
             </div>
 
@@ -271,11 +272,12 @@ export function App() {
                 id="height"
                 min="1"
                 onChange={(event) => {
-                  setHeight(event.target.value);
+                  const value = event.target.value;
+                  setHeight(value ? Number.parseFloat(value) : undefined);
                 }}
                 placeholder="Auto"
                 type="number"
-                value={height}
+                value={height ?? ''}
               />
             </div>
           </div>
