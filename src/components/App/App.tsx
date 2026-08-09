@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { convertSvgToImage, parseSvgSize } from 'src/utils/convertSvgToImage';
 import { readSvgFile } from 'src/utils/readSvgFile';
 
@@ -24,7 +24,7 @@ export function App() {
   const [error, setError] = useState<string | null>(null);
   const [isDragging, setIsDragging] = useState(false);
 
-  const updateSvg = useCallback((value: string, newFilename?: string) => {
+  function updateSvg(value: string, newFilename?: string) {
     setSvg(value);
     setOutput(null);
     setFilename(newFilename);
@@ -44,7 +44,7 @@ export function App() {
     } catch {
       setError('Invalid SVG markup');
     }
-  }, []);
+  }
 
   const handleSvgChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     updateSvg(event.target.value);
