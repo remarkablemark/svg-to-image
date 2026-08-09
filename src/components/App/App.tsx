@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { convertSvgToImage, parseSvgSize } from 'src/utils/convertSvgToImage';
 import { readSvgFile } from 'src/utils/readSvgFile';
 
@@ -22,7 +22,6 @@ export function App() {
     filename: string;
   } | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
 
   const updateSvg = useCallback((value: string, newFilename?: string) => {
@@ -97,34 +96,48 @@ export function App() {
     setIsDragging(false);
   };
 
-  const handleConvert = async () => {
-    /* v8 ignore start */
+  useEffect(() => {
     if (!svg.trim()) {
-      setError('Please paste or upload an SVG first');
       return;
     }
-    /* v8 ignore stop */
 
-    setIsLoading(true);
-    setError(null);
+    let cancelled = false;
 
-    try {
-      const result = await convertSvgToImage(svg, {
-        filename,
-        format,
-        height: height ? Number.parseFloat(height) : undefined,
-        quality: 0.92,
-        scale: scale ? Number.parseFloat(scale) : 1,
-        width: width ? Number.parseFloat(width) : undefined,
-      });
-      setOutput({ dataUrl: result.dataUrl, filename: result.filename });
-    } catch (err) {
-      /* v8 ignore next */
-      setError(err instanceof Error ? err.message : 'Failed to convert SVG');
-    } finally {
-      setIsLoading(false);
+    async function convert() {
+      setError(null);
+
+      try {
+        const result = await convertSvgToImage(svg, {
+          filename,
+          format,
+          height: height ? Number.parseFloat(height) : undefined,
+          quality: 0.92,
+          scale: scale ? Number.parseFloat(scale) : 1,
+          width: width ? Number.parseFloat(width) : undefined,
+        });
+
+        /* v8 ignore next 3 */
+        if (!cancelled) {
+          setOutput({ dataUrl: result.dataUrl, filename: result.filename });
+        }
+      } catch (err) {
+        /* v8 ignore next 3 */
+        if (!cancelled) {
+          /* v8 ignore next */
+          setError(
+            err instanceof Error ? err.message : 'Failed to convert SVG',
+          );
+          setOutput(null);
+        }
+      }
     }
-  };
+
+    void convert();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [svg, format, width, height, scale, filename]);
 
   const handleDownload = () => {
     /* v8 ignore next 3 */
@@ -266,17 +279,6 @@ export function App() {
               />
             </div>
           </div>
-
-          <button
-            className="mt-2 w-full cursor-pointer rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white shadow-xs transition-colors hover:bg-blue-700 focus:ring-2 focus:ring-blue-500/50 focus:outline-none disabled:pointer-events-none disabled:opacity-50"
-            disabled={!svg.trim() || !!error || isLoading}
-            onClick={() => {
-              void handleConvert();
-            }}
-            type="button"
-          >
-            {isLoading ? 'Converting...' : 'Convert'}
-          </button>
         </div>
       </section>
 

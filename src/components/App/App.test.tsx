@@ -34,52 +34,16 @@ describe('App component', () => {
     expect(screen.getByLabelText(/svg input/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/upload svg file/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/format/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /convert/i })).toBeDisabled();
   });
 
-  it('updates dimensions when svg markup is pasted', async () => {
+  it('updates dimensions and converts when svg markup is pasted', async () => {
     render(<App />);
 
     const textarea = screen.getByLabelText(/svg input/i);
-    await userEvent.clear(textarea);
-    await userEvent.type(textarea, svg);
+    fireEvent.change(textarea, { target: { value: svg } });
 
     expect(screen.getByLabelText(/width/i)).toHaveValue(100);
     expect(screen.getByLabelText(/height/i)).toHaveValue(50);
-  });
-
-  it('shows an error for invalid svg markup', async () => {
-    render(<App />);
-
-    const textarea = screen.getByLabelText(/svg input/i);
-    await userEvent.type(textarea, 'not svg');
-
-    expect(await screen.findByRole('alert')).toHaveTextContent(
-      'Invalid SVG markup',
-    );
-    expect(screen.getByRole('button', { name: /convert/i })).toBeDisabled();
-  });
-
-  it('clears state when the textarea is cleared', async () => {
-    render(<App />);
-
-    const textarea = screen.getByLabelText(/svg input/i);
-    await userEvent.type(textarea, svg);
-    await userEvent.clear(textarea);
-
-    expect(screen.getByLabelText(/width/i)).toHaveValue(null);
-    expect(screen.getByLabelText(/height/i)).toHaveValue(null);
-    expect(screen.getByRole('button', { name: /convert/i })).toBeDisabled();
-  });
-
-  it('converts svg when the convert button is clicked', async () => {
-    render(<App />);
-
-    const textarea = screen.getByLabelText(/svg input/i);
-    await userEvent.type(textarea, svg);
-
-    const convertButton = screen.getByRole('button', { name: /convert/i });
-    await userEvent.click(convertButton);
 
     await waitFor(() => {
       expect(screen.getByAltText('Converted')).toBeInTheDocument();
@@ -90,39 +54,66 @@ describe('App component', () => {
     ).toBeInTheDocument();
   });
 
-  it('changes output format when the format select changes', async () => {
+  it('shows an error for invalid svg markup', async () => {
     render(<App />);
 
     const textarea = screen.getByLabelText(/svg input/i);
-    await userEvent.type(textarea, svg);
+    fireEvent.change(textarea, { target: { value: 'not svg' } });
 
-    const formatSelect = screen.getByLabelText(/format/i);
-    await userEvent.selectOptions(formatSelect, 'image/webp');
+    expect(await screen.findByRole('alert')).toHaveTextContent(
+      'Invalid SVG markup',
+    );
+  });
 
-    const convertButton = screen.getByRole('button', { name: /convert/i });
-    await userEvent.click(convertButton);
+  it('clears state when the textarea is cleared', async () => {
+    render(<App />);
+
+    const textarea = screen.getByLabelText(/svg input/i);
+    fireEvent.change(textarea, { target: { value: svg } });
 
     await waitFor(() => {
       expect(screen.getByAltText('Converted')).toBeInTheDocument();
     });
 
-    expect(
-      screen.getByRole('button', { name: /download svg-to-image\.webp/i }),
-    ).toBeInTheDocument();
+    fireEvent.change(textarea, { target: { value: '' } });
+
+    expect(screen.getByLabelText(/width/i)).toHaveValue(null);
+    expect(screen.getByLabelText(/height/i)).toHaveValue(null);
+  });
+
+  it('changes output format when the format select changes', async () => {
+    render(<App />);
+
+    const textarea = screen.getByLabelText(/svg input/i);
+    fireEvent.change(textarea, { target: { value: svg } });
+
+    await waitFor(() => {
+      expect(screen.getByAltText('Converted')).toBeInTheDocument();
+    });
+
+    const formatSelect = screen.getByLabelText(/format/i);
+    await userEvent.selectOptions(formatSelect, 'image/webp');
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: /download svg-to-image\.webp/i }),
+      ).toBeInTheDocument();
+    });
   });
 
   it('scales dimensions when scale is changed', async () => {
     render(<App />);
 
     const textarea = screen.getByLabelText(/svg input/i);
-    await userEvent.type(textarea, svg);
+    fireEvent.change(textarea, { target: { value: svg } });
+
+    await waitFor(() => {
+      expect(screen.getByAltText('Converted')).toBeInTheDocument();
+    });
 
     const scaleInput = screen.getByLabelText(/scale/i);
     await userEvent.clear(scaleInput);
     await userEvent.type(scaleInput, '2');
-
-    const convertButton = screen.getByRole('button', { name: /convert/i });
-    await userEvent.click(convertButton);
 
     await waitFor(() => {
       expect(screen.getByAltText('Converted')).toBeInTheDocument();
@@ -133,7 +124,11 @@ describe('App component', () => {
     render(<App />);
 
     const textarea = screen.getByLabelText(/svg input/i);
-    await userEvent.type(textarea, svg);
+    fireEvent.change(textarea, { target: { value: svg } });
+
+    await waitFor(() => {
+      expect(screen.getByAltText('Converted')).toBeInTheDocument();
+    });
 
     const widthInput = screen.getByLabelText(/width/i);
     const heightInput = screen.getByLabelText(/height/i);
@@ -142,9 +137,6 @@ describe('App component', () => {
     await userEvent.type(widthInput, '64');
     await userEvent.clear(heightInput);
     await userEvent.type(heightInput, '32');
-
-    const convertButton = screen.getByRole('button', { name: /convert/i });
-    await userEvent.click(convertButton);
 
     await waitFor(() => {
       expect(screen.getByAltText('Converted')).toBeInTheDocument();
@@ -155,7 +147,11 @@ describe('App component', () => {
     render(<App />);
 
     const textarea = screen.getByLabelText(/svg input/i);
-    await userEvent.type(textarea, svg);
+    fireEvent.change(textarea, { target: { value: svg } });
+
+    await waitFor(() => {
+      expect(screen.getByAltText('Converted')).toBeInTheDocument();
+    });
 
     const scaleInput = screen.getByLabelText(/scale/i);
     const widthInput = screen.getByLabelText(/width/i);
@@ -164,9 +160,6 @@ describe('App component', () => {
     await userEvent.clear(scaleInput);
     await userEvent.clear(widthInput);
     await userEvent.clear(heightInput);
-
-    const convertButton = screen.getByRole('button', { name: /convert/i });
-    await userEvent.click(convertButton);
 
     await waitFor(() => {
       expect(screen.getByAltText('Converted')).toBeInTheDocument();
@@ -184,9 +177,6 @@ describe('App component', () => {
     await waitFor(() => {
       expect(screen.getByText('icon.svg')).toBeInTheDocument();
     });
-
-    const convertButton = screen.getByRole('button', { name: /convert/i });
-    await userEvent.click(convertButton);
 
     await waitFor(() => {
       expect(screen.getByAltText('Converted')).toBeInTheDocument();
@@ -229,6 +219,10 @@ describe('App component', () => {
     await waitFor(() => {
       expect(screen.getByText('dropped.svg')).toBeInTheDocument();
     });
+
+    await waitFor(() => {
+      expect(screen.getByAltText('Converted')).toBeInTheDocument();
+    });
   });
 
   it('shows an error when a non-svg file is dropped', async () => {
@@ -259,7 +253,7 @@ describe('App component', () => {
       dataTransfer: { files: { item: () => null, length: 0 } },
     });
 
-    expect(screen.getByRole('button', { name: /convert/i })).toBeDisabled();
+    expect(screen.queryByAltText('Converted')).not.toBeInTheDocument();
   });
 
   it('toggles drag state on drag over and drag leave', () => {
@@ -277,10 +271,7 @@ describe('App component', () => {
     render(<App />);
 
     const textarea = screen.getByLabelText(/svg input/i);
-    await userEvent.type(textarea, svg);
-
-    const convertButton = screen.getByRole('button', { name: /convert/i });
-    await userEvent.click(convertButton);
+    fireEvent.change(textarea, { target: { value: svg } });
 
     const downloadButton = await screen.findByRole('button', {
       name: /download/i,
