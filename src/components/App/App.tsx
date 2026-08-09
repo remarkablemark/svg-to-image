@@ -171,7 +171,7 @@ export function App() {
             SVG Input
           </label>
           <textarea
-            className={`min-h-48 w-full flex-1 resize-none rounded-lg border bg-white p-4 font-mono text-sm shadow-xs transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:bg-slate-800 dark:text-slate-100 ${
+            className={`min-h-48 w-full resize-y rounded-lg border bg-white p-4 font-mono text-sm shadow-xs transition-colors focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none dark:bg-slate-800 dark:text-slate-100 ${
               isDragging
                 ? 'border-blue-500 bg-blue-50 dark:bg-slate-700'
                 : 'border-slate-300 dark:border-slate-600'
