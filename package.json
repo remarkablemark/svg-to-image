@@ -1,7 +1,6 @@
 {
-  "name": "vite-react-tailwind-template",
+  "name": "svg-to-image",
   "private": true,
-  "version": "1.0.0-alpha",
   "type": "module",
   "scripts": {
     "build": "tsc && vite build",

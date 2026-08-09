@@ -1,7 +1,7 @@
 {
-  "name": "Vite React Tailwind Template",
-  "short_name": "Vite React Tailwind Template",
-  "description": "Vite React Tailwind Template",
+  "name": "SVG to Image",
+  "short_name": "SVG to Image",
+  "description": "🖼️ Convert SVG to PNG image",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#ffffff",

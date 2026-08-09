@@ -1,18 +1,20 @@
-# vite-react-tailwind-template
+# SVG to Image
 
-[![build](https://github.com/remarkablemark/vite-react-tailwind-template/actions/workflows/build.yml/badge.svg)](https://github.com/remarkablemark/vite-react-tailwind-template/actions/workflows/build.yml)
-[![test](https://github.com/remarkablemark/vite-react-tailwind-template/actions/workflows/test.yml/badge.svg)](https://github.com/remarkablemark/vite-react-tailwind-template/actions/workflows/test.yml)
+[![build](https://github.com/remarkablemark/svg-to-image/actions/workflows/build.yml/badge.svg)](https://github.com/remarkablemark/svg-to-image/actions/workflows/build.yml)
+[![test](https://github.com/remarkablemark/svg-to-image/actions/workflows/test.yml/badge.svg)](https://github.com/remarkablemark/svg-to-image/actions/workflows/test.yml)
 [![codecov](https://codecov.io/gh/remarkablemark/svg-to-image/graph/badge.svg?token=Eq8Hff7aG4)](https://codecov.io/gh/remarkablemark/svg-to-image)
 
-⚡ Vite React Tailwind Template
+🖼️ Convert SVG to PNG image:
+
+- [SVG to Image](https://remarkablemark.org/svg-to-image/)
 
 ## Install
 
 Clone the repository:
 
 ```sh
-git clone https://github.com/remarkablemark/vite-react-tailwind-template.git
-cd vite-react-tailwind-template
+git clone https://github.com/remarkablemark/svg-to-image.git
+cd svg-to-image
 ```
 
 Install the dependencies:
