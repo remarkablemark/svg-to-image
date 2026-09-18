@@ -185,7 +185,6 @@ export function App() {
                 ? 'border-blue-500 bg-blue-50 dark:bg-slate-700'
                 : 'border-slate-300 dark:border-slate-600'
             }`}
-            draggable
             id="svg-input"
             onChange={handleSvgChange}
             onDragLeave={handleDragLeave}
