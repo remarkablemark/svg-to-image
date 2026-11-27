@@ -1,0 +1,17 @@
+{
+  "name": "SVG to Image",
+  "short_name": "SVG to Image",
+  "description": "🖼️ Convert SVG to PNG image",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
